@@ -9,7 +9,7 @@ contract Whitelist {
 
     uint8 public numAddressesWhitelisted;
 
-    constructor() public {}
+    constructor() {}
   
     function addAddressToWhitelist() public {
         require(!whitelistedAddresses[msg.sender], "Bu adres ile zaten whiteliste katilmissin.");
