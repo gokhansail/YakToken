@@ -4,7 +4,7 @@ require("@nomiclabs/hardhat-etherscan");
 
 async function main() {
 
-  const whitelistContract = await ethers.getContractFactory("whitelist");
+  const whitelistContract = await ethers.getContractFactory("Whitelist");
 
   const deployedWhitelistContract = await whitelistContract.deploy();
   
@@ -17,7 +17,7 @@ async function main() {
 
   await sleep(10000);
 
-  await hre.run("whitelist:whitelist", {
+  await hre.run("verify:verify", {
     address: deployedWhitelistContract.address,
     constructorArguments: [],
   });
