@@ -8,6 +8,8 @@ contract Whitelist {
     mapping(address => bool) public whitelistedAddresses;
 
     uint8 public numAddressesWhitelisted;
+
+    constructor() public {}
   
     function addAddressToWhitelist() public {
         require(!whitelistedAddresses[msg.sender], "Bu adres ile zaten whiteliste katilmissin.");
