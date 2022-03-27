@@ -1,4 +1,6 @@
 const { ethers } = require("hardhat");
+require("dotenv").config({ path: ".env" });
+require("@nomiclabs/hardhat-etherscan");
 
 async function main() {
 
@@ -12,6 +14,17 @@ async function main() {
     "Kontrat şu adres ile deploy edildi:",
     deployedWhitelistContract.address
   );
+
+  await sleep(10000);
+
+  await hre.run("whitelist:whitelist", {
+    address: deployedWhitelistContract.address,
+    constructorArguments: [],
+  });
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 main()
