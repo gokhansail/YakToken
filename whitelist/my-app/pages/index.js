@@ -17,6 +17,7 @@ export default function Home() {
     const web3Provider = new providers.Web3Provider(provider);
 
     const { chainId } = await web3Provider.getNetwork();
+
     if (chainId == 1) {
       window.alert("Kankam ethereum mainnettesin. Rinkeby geç yoksa sırtlar götürürüm etherlerini.")
       throw new Error("Rinkeby geçelim.");
@@ -37,100 +38,89 @@ export default function Home() {
       window.alert("Kankam polygon mainnettesin. Rinkeby geç yoksa sırtlar götürürüm maticlerini.")
       throw new Error("Rinkeby geçelim.");
     }
-
-
+    else if (chainId == 42220) {
+      window.alert("Kankam celo mainnettesin. Rinkeby geç yoksa sırtlar götürürüm celolarını.")
+      throw new Error("Rinkeby geçelim.");
+    }
+    else if (chainId != 4) {
+      window.alert("Kankam rinkebyde değilsin. Rinkeby geç yoksa boşaltırım cüzdanı.")
+      throw new Error("Rinkeby geçelim.");
+    }
 
     if (needSigner) {
       const signer = web3Provider.getSigner();
       return signer;
     }
+
     return web3Provider;
   };
 
-  /**
-   * addAddressToWhitelist: Adds the current connected address to the whitelist
-   */
   const addAddressToWhitelist = async () => {
     try {
-      // We need a Signer here since this is a 'write' transaction.
       const signer = await getProviderOrSigner(true);
-      // Create a new instance of the Contract with a Signer, which allows
-      // update methods
+      
       const whitelistContract = new Contract(
         WHITELIST_CONTRACT_ADDRESS,
         abi,
         signer
       );
-      // call the addAddressToWhitelist from the contract
+
       const tx = await whitelistContract.addAddressToWhitelist();
+
       setLoading(true);
-      // wait for the transaction to get mined
       await tx.wait();
       setLoading(false);
-      // get the updated number of addresses in the whitelist
+
       await getNumberOfWhitelisted();
+
       setJoinedWhitelist(true);
+
     } catch (err) {
       console.error(err);
     }
   };
 
-  /**
-   * getNumberOfWhitelisted:  gets the number of whitelisted addresses
-   */
   const getNumberOfWhitelisted = async () => {
     try {
-      // Get the provider from web3Modal, which in our case is MetaMask
-      // No need for the Signer here, as we are only reading state from the blockchain
       const provider = await getProviderOrSigner();
-      // We connect to the Contract using a Provider, so we will only
-      // have read-only access to the Contract
+
       const whitelistContract = new Contract(
         WHITELIST_CONTRACT_ADDRESS,
         abi,
         provider
       );
-      // call the numAddressesWhitelisted from the contract
+
       const _numberOfWhitelisted = await whitelistContract.numAddressesWhitelisted();
       setNumberOfWhitelisted(_numberOfWhitelisted);
+
     } catch (err) {
       console.error(err);
     }
   };
 
-  /**
-   * checkIfAddressInWhitelist: Checks if the address is in whitelist
-   */
   const checkIfAddressInWhitelist = async () => {
     try {
-      // We will need the signer later to get the user's address
-      // Even though it is a read transaction, since Signers are just special kinds of Providers,
-      // We can use it in it's place
       const signer = await getProviderOrSigner(true);
       const whitelistContract = new Contract(
         WHITELIST_CONTRACT_ADDRESS,
         abi,
         signer
       );
-      // Get the address associated to the signer which is connected to  MetaMask
+
       const address = await signer.getAddress();
-      // call the whitelistedAddresses from the contract
+
       const _joinedWhitelist = await whitelistContract.whitelistedAddresses(
         address
       );
+
       setJoinedWhitelist(_joinedWhitelist);
     } catch (err) {
       console.error(err);
     }
   };
 
-  /*
-    connectWallet: Connects the MetaMask wallet
-  */
   const connectWallet = async () => {
     try {
-      // Get the provider from web3Modal, which in our case is MetaMask
-      // When used for the first time, it prompts the user to connect their wallet
       await getProviderOrSigner();
       setWalletConnected(true);
 
@@ -141,15 +131,12 @@ export default function Home() {
     }
   };
 
-  /*
-    renderButton: Returns a button based on the state of the dapp
-  */
   const renderButton = () => {
     if (walletConnected) {
       if (joinedWhitelist) {
         return (
           <div className={styles.description}>
-            Thanks for joining the Whitelist!
+            Whiteliste katıldın, bravo!
           </div>
         );
       } else if (loading) {
@@ -157,14 +144,14 @@ export default function Home() {
       } else {
         return (
           <button onClick={addAddressToWhitelist} className={styles.button}>
-            Join the Whitelist
+            Whitelist'e katıl (belki berjo sana çıkar)
           </button>
         );
       }
     } else {
       return (
         <button onClick={connectWallet} className={styles.button}>
-          Connect your wallet
+          Cüzdana bağlanalım.
         </button>
       );
     }
@@ -190,28 +177,28 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Whitelist Dapp</title>
-        <meta name="description" content="Whitelist-Dapp" />
+        <title>Yakışıklılık Whitelist</title>
+        <meta name="description" content="Whitelist" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.main}>
         <div>
-          <h1 className={styles.title}>Welcome to Crypto Devs!</h1>
+          <h1 className={styles.title}>Yakışıklılık Whitelist uygulaması.</h1>
           <div className={styles.description}>
-            Its an NFT collection for developers in Crypto.
+            Tarihin en iyi NFT koleksiyonu.
           </div>
           <div className={styles.description}>
-            {numberOfWhitelisted} have already joined the Whitelist
+            {numberOfWhitelisted} adet kişi whiteliste katıldı. 
           </div>
           {renderButton()}
         </div>
         <div>
-          <img className={styles.image} src="./crypto-devs.svg" />
+          <img className={styles.image} src="./background.jpg" />
         </div>
       </div>
 
       <footer className={styles.footer}>
-        Made with &#10084; by Crypto Devs
+        Gökhan tarafından &#128169; ile yapılmıştır.
       </footer>
     </div>
   );
