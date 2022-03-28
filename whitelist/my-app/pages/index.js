@@ -197,6 +197,16 @@ export default function Home() {
             {numberOfWhitelisted} adet kişi whiteliste katıldı. 
           </div>
           {renderButton()}
+          <div>
+            <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open("https://faucets.chain.link/rinkeby", "_blank");
+                  }}
+                  className={styles.button}
+            > Test Ether Al</button>
+          </div>
         </div>
         <div>
           <img className={styles.image} src="./background.png" />
