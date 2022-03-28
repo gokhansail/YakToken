@@ -156,7 +156,7 @@ export default function Home() {
       } else {
         return (
           <button onClick={addAddressToWhitelist} className={styles.button}>
-            Whitelist'e katıl (belki berjo sana çıkar)
+            Whiteliste katıl (belki berjo sana çıkar)
           </button>
         );
       }
