@@ -199,7 +199,7 @@ export default function Home() {
           {renderButton()}
         </div>
         <div>
-          <img className={styles.image} src="./background.jpg" />
+          <img className={styles.image} src="./background.png" />
         </div>
       </div>
 
