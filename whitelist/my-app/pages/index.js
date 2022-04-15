@@ -10,6 +10,7 @@ export default function Home() {
   const [joinedWhitelist, setJoinedWhitelist] = useState(false);
   const [loading, setLoading] = useState(false);
   const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
+  const [ethBalance, setEthBalance] = useState(0);
   const web3ModalRef = useRef();
   const wrongNetworkCount = 0;
 
@@ -61,11 +62,29 @@ export default function Home() {
 
     if (needSigner) {
       const signer = web3Provider.getSigner();
+      getEthBalance();
       return signer;
     }
 
     return web3Provider;
   };
+
+  const getEthBalance = async () => {
+    try {
+      const ethers = require('ethers')
+      const network = 'rinkeby' // use rinkeby testnet
+      const balanceProvider = ethers.getDefaultProvider(network)
+      const signer = getProviderOrSigner(true);
+      const address = signer.getAddress()
+  
+      balanceProvider.getBalance(address).then((balance) => {
+        const balanceInEth = ethers.utils.formatEther(balance);
+        setEthBalance(balanceInEth);
+       })
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const addAddressToWhitelist = async () => {
     try {
@@ -198,6 +217,8 @@ export default function Home() {
           </div>
           {renderButton()}
           <div>
+            <div>Cüzdanında <span id="balance"></span> adet eth var fukara iblis.</div>
+
             <button
                 type="button"
                 onClick={(e) => {
@@ -212,10 +233,10 @@ export default function Home() {
           <img className={styles.image} src="./background.png" />
         </div>
       </div>
-
       <footer className={styles.footer}>
         Gökhan tarafından &#128169; ile yapılmıştır.
       </footer>
     </div>
+    
   );
 }
